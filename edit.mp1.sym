@@ -1,0 +1,22 @@
+// Symbol table
+// Scope level 0:
+//	Symbol Name       Page Address
+//	----------------  ------------
+//	R0_OK             300F
+//	BITS              3010
+//	EXAMPLE           3011
+//	R0_BAD            3012
+//	STRLEN            302D
+//	Count_Loop        3031
+//	End_Count         3036
+//	PRINT_DECIMAL     3038
+//	ConvertLoop       3039
+//	IsZero            3043
+//	EndConvert        3047
+//	Divide            3049
+//	DivLoop           304C
+//	EndDivide         3052
+//	DigitTable        3054
+//	Divisor           305F
+//	SaveR7            3060
+

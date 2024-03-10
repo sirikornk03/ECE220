@@ -1,0 +1,53 @@
+PRINT_CENTERED ST R7, SAVE_R7	; Save the return address
+	LD R2, R1              ; Load the address of the string
+    	LD R3, OUTPUT_STRING  	; Load the address for output
+
+    	AND R4, R4, #0		; Initialize counter for characters printed
+    	
+    	COPY_LOOP
+   	LDR R5, R2, #0        ; Load a character from the string
+   	STR R5, R3, #0        ; Store it in the output buffer
+   	ADD R2, R2, #1        ; Advance the source pointer
+    	ADD R3, R3, #1        ; Advance the destination pointer
+    	ADD R4, R4, #1        ; Increment character counter
+    	BRz END_COPY
+
+    	; Check if all 9 characters have been printed
+    	ADD R6, R4, #-9
+    	BRz END_COPY
+
+    	; Continue copying if not all characters have been copied
+    	BRnzp COPY_LOOP
+
+END_COPY
+    	; Calculate the number of spaces to add
+    	ADD R5, R4, #-9
+    	BRn SKIP_SPACES
+    	ADD R5, R4, #9
+    	
+SKIP_SPACES
+	; Determine whether to add more leading or trailing spaces
+    	ADD R6, R5, #-1
+    	BRn MORE_LEADING
+
+    	; Add trailing spaces
+    	ADD R5, R5, #-1
+
+MORE_LEADING
+    	; Add leading spaces
+    	ADD R4, R5, #0
+
+    	; Output the centered string
+    	ST R4, OUTPUT_STRING+9  ; Null-terminate the output string
+
+    	; Restore return address and return using TRAP
+    	LD R7, SAVE_R7
+    	TRAP x25  ; TRAP to HALT
+
+SAVE_R7 .BLKW 1
+OUTPUT_STRING .BLKW 10  ; Allocate space for the output string
+
+.END
+
+	
+

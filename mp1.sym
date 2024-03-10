@@ -1,0 +1,39 @@
+// Symbol table
+// Scope level 0:
+//	Symbol Name       Page Address
+//	----------------  ------------
+//	R0_OK             300F
+//	BITS              3010
+//	EXAMPLE           3011
+//	R0_BAD            3012
+//	STRLEN            302D
+//	STRLEN_LOOP       302F
+//	STRLEN_DONE       3034
+//	PRINT_DECIMAL     3035
+//	PRINT_ZERO        3040
+//	PRINT_DIGIT_LOOP  3043
+//	CHECK             3046
+//	CONVERT_TENTHOUSAND  3049
+//	START_AGAIN       3050
+//	CONVERT_THOUSAND  3055
+//	CHECK_AGAIN       305C
+//	CONVERT_HUNDRED   3060
+//	CHECK10OR1        3067
+//	CONVERT_TEN       306A
+//	CONVERT_ONES      3070
+//	CONVERT_ASCII     3075
+//	PRINT_DONE        307A
+//	SAVE_R7           3081
+//	SAVE_R6           3082
+//	SAVE_R5           3083
+//	SAVE_R4           3084
+//	SAVE_R3           3085
+//	SAVE_R0           3086
+//	ASCIIZERO         3088
+//	NEG_10000         3089
+//	POS_10000         308A
+//	NEG_1000          308B
+//	NEG_100           308C
+//	POS_1000          308D
+//	POS_100           308E
+

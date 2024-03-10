@@ -1,0 +1,592 @@
+PROGRAM 1: Reverse Printing
+
+ARGUMENT: Reverse the input string
+FUNCTION: Prints the the string in the reverse order and count the length
+
+TEST CASES:
+
+9 8 7 6 5 4 3 2 1 0
+What's on the stack now?
+
+"hi" reversed is "ih" (length 2)
+[Inferior 1 (process 8595) exited normally]
+
+9 8 7 6 5 4 3 2 1 0
+What's on the stack now?
+
+"cat" reversed is "tac" (length 3)
+[Inferior 1 (process 8598) exited normally]
+
+
+9 8 7 6 5 4 3 2 1 0
+What's on the stack now?
+
+//bug
+"blue" reversed is "eulb" (length 32771)	//length 4
+[Inferior 1 (process 8599) exited normally]       
+
+
+9 8 7 6 5 4 3 2 1 0
+What's on the stack now?
+
+//bug
+"hello" reversed is "olleh" (length 32772)	//length 5
+[Inferior 1 (process 8600) exited normally]     
+
+
+9 8 7 6 5 4 3 2 1 0
+What's on the stack now?
+
+//bug
+"output" reversed is "tuptuo" (length 32773)	 //length 6
+[Inferior 1 (process 8601) exited normally]    
+
+9 8 7 6 5 4 3 2 1 0
+What's on the stack now?
+
+"reverse" reversed is "esrever" (length 7)
+[Inferior 1 (process 8602) exited normally]
+
+TRACING:
+
+(gdb) break pr_buggy.c:48
+Breakpoint 1 at 0x12cb: file pr_buggy.c, line 48.
+(gdb) define single_step
+Type commands for definition of "single_step".
+End with a line saying just "end".
+>print rest
+>continue
+>end
+//bug
+(gdb) run Hello
+Starting program: /home/a.out Hello
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+9 8 7 6 5 4 3 2 1 0
+What's on the stack now?
+
+
+Breakpoint 1, print_reverse (s=0x7fffffffeec0 "o") at pr_buggy.c:48
+48          printf ("%c", *s);
+(gdb) single_step
+$1 = 32767      //$1 = 0
+
+Breakpoint 1, print_reverse (s=0x7fffffffeebf "lo") at pr_buggy.c:48
+48          printf ("%c", *s);
+(gdb) single_step
+$2 = 32768      //$2 = 1
+
+Breakpoint 1, print_reverse (s=0x7fffffffeebe "llo") at pr_buggy.c:48
+48          printf ("%c", *s);
+(gdb) single_step
+$3 = 32769      //$3 = 2
+
+Breakpoint 1, print_reverse (s=0x7fffffffeebd "ello") at pr_buggy.c:48
+48          printf ("%c", *s);
+(gdb) single_step
+$4 = 32770      //$4 = 3
+
+Breakpoint 1, print_reverse (s=0x7fffffffeebc "Hello") at pr_buggy.c:48
+48          printf ("%c", *s);
+(gdb) single_step
+$5 = 32771      //$5 = 4
+"Hello" reversed is "olleH" (length 32772)
+[Inferior 1 (process 3741) exited normally]
+(gdb) run hi
+Starting program: 
+
+//correct to the actual length
+9 8 7 6 5 4 3 2 1 0
+What's on the stack now?
+
+
+Breakpoint 1, print_reverse (s=0x7fffffffeec0 "i") at pr_buggy.c:48
+48          printf ("%c", *s);
+(gdb) single_step
+$6 = 0
+
+Breakpoint 1, print_reverse (s=0x7fffffffeebf "hi") at pr_buggy.c:48
+48          printf ("%c", *s);
+(gdb) single_step
+$7 = 1
+"hi" reversed is "ih" (length 2)
+[Inferior 1 (process 3744) exited normally]
+
+RESULT:
+The function problem is overflow when the actual length is 4, 5, and 6
+which the overflow number is 32767 at the last order of the string.
+Therefore, when return the recursion with 4, 5,and 6 length will begin 
+with 32767, instead of 0.
+
+SOLUTION:
+at pr_buggy.c:41 change from return rest; -> return 0;
+
+------------------------------------------------------------------------------
+
+PROGRAM 2: primeNumber
+ARGUMENT: -
+FUNCTION: print prime number from 2 to 999
+
+TEST CASE:
+
+(gdb) run
+Starting program: /home/sirikorn/sirikorn22/mps/mp7/primeNumber/primeNumber 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+2 is prime.
+3 is prime.
+4 is prime.	//bug 2^2 = 4
+5 is prime.
+7 is prime.
+9 is prime.	//bug 3^2 = 9
+11 is prime.
+13 is prime.
+17 is prime.
+19 is prime.
+23 is prime.
+25 is prime.	//bug 5^2 = 25
+29 is prime.
+31 is prime.
+37 is prime.
+41 is prime.
+43 is prime.
+47 is prime.
+49 is prime.	//bug 7^2 = 49
+53 is prime.
+59 is prime.
+61 is prime.
+67 is prime.
+71 is prime.
+73 is prime.
+79 is prime.
+83 is prime.
+89 is prime.
+97 is prime.
+101 is prime.
+103 is prime.
+107 is prime.
+109 is prime.
+113 is prime.
+121 is prime.	//bug 11^2 = 121
+127 is prime.
+131 is prime.
+137 is prime.
+139 is prime.
+149 is prime.
+151 is prime.
+157 is prime.
+163 is prime.
+167 is prime.
+169 is prime.	//bug 13^2 = 169
+173 is prime.
+179 is prime.
+181 is prime.
+191 is prime.
+193 is prime.
+197 is prime.
+199 is prime.
+211 is prime.
+223 is prime.
+227 is prime.
+229 is prime.
+233 is prime.
+239 is prime.
+241 is prime.
+251 is prime.
+257 is prime.
+263 is prime.
+269 is prime.
+271 is prime.
+277 is prime.
+281 is prime.
+283 is prime.
+289 is prime.	//bug 17^2 = 289
+293 is prime.
+307 is prime.
+311 is prime.
+313 is prime.
+317 is prime.
+331 is prime.
+337 is prime.
+347 is prime.
+349 is prime.
+353 is prime.
+359 is prime.
+361 is prime.	//bug 19^2 = 361
+367 is prime.
+373 is prime.
+379 is prime.
+383 is prime.
+389 is prime.
+397 is prime.
+401 is prime.
+409 is prime.
+419 is prime.
+421 is prime.
+431 is prime.
+433 is prime.
+439 is prime.
+443 is prime.
+449 is prime.
+457 is prime.
+461 is prime.
+463 is prime.
+467 is prime.
+479 is prime.
+487 is prime.
+491 is prime.
+499 is prime.
+503 is prime.
+509 is prime.
+521 is prime.
+523 is prime.
+529 is prime.	//bug 23^2 = 529
+541 is prime.
+547 is prime.
+557 is prime.
+563 is prime.
+569 is prime.
+571 is prime.
+577 is prime.
+587 is prime.
+593 is prime.
+599 is prime.
+601 is prime.
+607 is prime.
+613 is prime.
+617 is prime.
+619 is prime.
+631 is prime.
+641 is prime.
+643 is prime.
+647 is prime.
+653 is prime.
+659 is prime.
+661 is prime.
+673 is prime.
+677 is prime.
+683 is prime.
+691 is prime.
+701 is prime.
+709 is prime.
+719 is prime.
+727 is prime.
+733 is prime.
+739 is prime.
+743 is prime.
+751 is prime.
+757 is prime.
+761 is prime.
+769 is prime.
+773 is prime.
+787 is prime.
+797 is prime.
+809 is prime.
+811 is prime.
+821 is prime.
+823 is prime.
+827 is prime.
+829 is prime.
+839 is prime.
+841 is prime.	//bug 29^2 = 841
+853 is prime.
+857 is prime.
+859 is prime.
+863 is prime.
+877 is prime.
+881 is prime.
+883 is prime.
+887 is prime.
+907 is prime.
+911 is prime.
+919 is prime.
+929 is prime.
+937 is prime.
+941 is prime.
+947 is prime.
+953 is prime.
+961 is prime.	//bug 31^2 = 961
+967 is prime.
+971 is prime.
+977 is prime.
+983 is prime.
+991 is prime.
+997 is prime.
+[Inferior 1 (process 3420) exited normally]
+
+TRACING
+
+(gdb) b divides_evenly
+Breakpoint 1 at 0x555555555191
+(gdb) run
+Starting program: /home/sirikorn/sirikorn22/mps/mp7/primeNumber/primeNumber 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+2 is prime.
+3 is prime.
+4 is prime.	//bug
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) continue
+Continuing.
+5 is prime.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) continue
+Continuing. 	//6 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+7 is prime.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing. 	//8 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+9 is prime.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//10 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+11 is prime.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//12 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+13 is prime.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//14 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//15 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//16 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+17 is prime.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//18 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+19 is prime.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//20 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//21 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//22 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+23 is prime.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//24 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+25 is prime.	//bug
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//26 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//27 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//28 is excluded
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.
+29 is prime.
+
+Breakpoint 1, 0x0000555555555191 in divides_evenly ()
+(gdb) 
+Continuing.	//30 is excluded
+
+RESULT:
+
+This function is include the square number of prime number
+which is not a prime number. The cause of this error is
+the range from [2, num-1]. If it is [2, sqrt(num)], the 
+divides_evenly to (sqrt(num)), num) == 1.
+
+---------------------------------------------------------------------
+
+PROGRAM3: sort
+ARGUMENT: it begins with n which is the length of the array to be sorted.
+array[0], array[1], ..., array[n-1]. until the end.
+
+FUNCTION: print the input string in incresing order
+
+TEST CASES:
+test1
+20
+1 22 3 45 51 96 117 18 29 13 9 100 41 23 12 99 15 19 58 97
+
+expected result:
+1 3 9 12 13 15 18 19 22 23 29 41 45 51 58 96 97 99 100 117
+
+(gdb) run test1.txt
+Starting program: /home/sirikorn/sirikorn22/mps/mp7/sort/sort test1.txt
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+1 3 9 12 13 15 18 19 22 23 29 41 45 51 58 96 97 99 100 117
+[Inferior 1 (process 14745) exited normally]
+
+my_test2
+12
+1 2 6 4 7 10000 2000000 300000 310000 3200000 340 2345662
+
+expected result:
+1 2 4 6 7 340 10000 300000 310000 2000000 2345662 3200000
+
+(gdb) run my_test2.txt
+Starting program: /home/sirikorn/sirikorn22/mps/mp7/sort/sort my_test2.txt
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+1 2 4 6 7 340 10000 300000 310000 2000000 2345662 3200000
+[Inferior 1 (process 14745) exited normally]
+(gdb) run my_test2.txt
+Starting program: /home/sirikorn/sirikorn22/mps/mp7/sort/sort my_test2.txt
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+1 2 4 6 7 340 10000 10000 300000 310000 2000000 2345662	
+//bug 3200000 unfound and 10000 printed twice
+[Inferior 1 (process 14752) exited normally]
+(gdb) run my_test2.txt
+Starting program: /home/sirikorn/sirikorn22/mps/mp7/sort/sort my_test2.txt
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+1 2 4 6 7 340 10000 300000 310000 2000000 2345662 3200000
+[Inferior 1 (process 14753) exited normally]
+
+my_test3
+
+20
+-1000 -1499 -1500 -400 -450 -600 -1999 0 0 1 -1 -2 10000 54678 -352 45 67 789 9020 5674
+
+expedted result:
+-1999 -1500 -1499 -1000 -600 -450 -400 -352 -2 -1 0 0 1 45 67 789 5674 9020 10000 54678
+
+Starting program: /home/sirikorn/sirikorn22/mps/mp7/sort/sort my_test3.txt
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+-1999 -1500 -1499 -1000 -600 -450 -400 -352 -2 -1 0 0 1 45 67 789 5674 9020 10000 54678
+[Inferior 1 (process 14820) exited normally]
+(gdb) run my_test3.txt
+Starting program: /home/sirikorn/sirikorn22/mps/mp7/sort/sort my_test3.txt
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+-1999 -1500 -1499 -1000 -600 -450 -400 -400 -352 -2 -1 0 0 1 45 67 789 5674 9020 10000
+//bug 54678 unfound and -400 printed twice
+[Inferior 1 (process 14823) exited normally]
+
+TRACING:
+Oversized in input is resulted in missed and unstable function
+
+RESULT:
+Result is inconsistent which is tested by run the programs multiple times.
+A potential bug is the memory that is either missing free array or the 
+input size which cause the array to overflow. This error oocurs when there
+are overwhelmed number (input) being sorted.

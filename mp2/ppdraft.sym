@@ -1,0 +1,16 @@
+// Symbol table
+// Scope level 0:
+//	Symbol Name       Page Address
+//	----------------  ------------
+//	STRLEN            3009
+//	LOOPONE           300B
+//	PRINT_DECIMAL     301A
+//	LOOPTWO           3020
+//	LOOPTHREE         3022
+//	LOOPFOUR          3027
+//	BITS              3034
+//	EXAMPLE           3035
+//	NUM               3036
+//	FINSTRLEN         3037
+//	FINPRINT          304D
+

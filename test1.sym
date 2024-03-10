@@ -1,0 +1,8 @@
+// Symbol table
+// Scope level 0:
+//	Symbol Name       Page Address
+//	----------------  ------------
+//	R0_OK             300E
+//	BITS              300F
+//	EXAMPLE           3010
+//	R0_BAD            3011

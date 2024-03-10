@@ -1,0 +1,20 @@
+// Symbol table
+// Scope level 0:
+//	Symbol Name       Page Address
+//	----------------  ------------
+//	R0_OK             300F
+//	BITS              3010
+//	EXAMPLE           3011
+//	R0_BAD            3012
+//	STRLEN            302D
+//	STRLEN_LOOP       302F
+//	STRLEN_DONE       3034
+//	PRINT_DECIMAL     3035
+//	PRINT_DIGIT_LOOP  303B
+//	PRINT_DONE        3042
+//	SAVE_R7           3047
+//	SAVE_R6           3048
+//	SAVE_R5           3049
+//	SAVE_R4           304A
+//	DIGIT_TABLE       304B
+
